@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 
 Route::resource('api/items', 'ItemsController');
+
+// see itemmanager/index.html
