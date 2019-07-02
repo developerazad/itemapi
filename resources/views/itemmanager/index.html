@@ -4,6 +4,7 @@
     <title>Item Manager REST API</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+
 </head>
 
 
@@ -38,11 +39,24 @@
     </div>
 </div>
 <!--/- navbar -->
-
 <br>
 <div class="container">
+    <h3>Add ITem</h3>
+    <form action="" id="itemForm">
+        <div class="form-group">
+            <label for="">Text</label>
+            <input type="text" name="text" id="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="">Body</label>
+            <input type="text" name="body" id="body" class="form-control">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-info">
+    </form>
+    <br>
     <ul id="items" class="list-group"></ul>
 </div>
+
 
 
 <!--jQuery cdn-->
@@ -54,25 +68,46 @@
 </script>
 <!--jQuery cdn-->
 
+<!--customize script-->
 <script type="text/javascript">
+    // get items by api
     $(document).ready(function () {
         getItems();
-
         function getItems() {
             $.ajax({
                 url:'http://localhost:8080/itemapi/public/api/items'
-            }).done(function (items) {
-
+            }).done(function(items){
                 let output = '';
-                $.each(items, function (key,item) {
-                    output += ` <li class="list-group-item">
-                                    <strong>${item.text}: </strong>${item.body}
-                                </li> `;
+                $.each(items,function(key,item){
+                    output += `<li class="list-group-item"><strong>${item.text}: </strong>${item.body}</li>`;
                 });
                 $('#items').append(output);
             });
+
         }
+    })
+    // catch item by form submit
+    $('#itemForm').on('submit', function (e) {
+        e.preventDefault();
+        let text = $('#text').val();
+        let body = $('#body').val();
+        addItem(text, body);
     });
+    // add item by api
+    function addItem(text, body){
+        $.ajax({
+            method:'post',
+            url: 'http://localhost:8080/itemapi/public/api/items',
+            data:{text:text,body:body}
+        }).done(function (item) {
+            alert('item #'+item.id+ 'added');
+            location.reload();
+        });
+    }
+
 </script>
+<!--customize script-->
+
+
 </body>
 </html>
